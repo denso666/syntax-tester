@@ -6,14 +6,14 @@ const dictionary = {
     '>=':'Mayor or Equal',
     '<':'Minor',
     '<=':'Minor or Equal',
+    '!':'Difernt',
     '!=':'Difernt',
     '==':'Identical',
     '(':'Open Parenthesis',
     ')':'Closed Parenthesis'
 }
 const identifier = new RegExp('^[_a-zA-Z][_a-zA-Z0-9]{0,30}$');
-const number = new RegExp('^[0-9]+(.[0-9]+)?$');
-
+const number = new RegExp('^-?[0-9]+(.[0-9]+)?$');
 
 function test() {
     let sentence = document.getElementById('sentence').value;
@@ -21,34 +21,34 @@ function test() {
     let tokens = [];
 
     //letter for letter
-    for (let i = 0;i<sentence.length;i++) {
-        
+    for (let i = 0; i < sentence.length; i++) {
         //space or nothing, pass the symbol
         if (sentence[i] == '' || sentence[i] == ' ') continue;
 
         //simple symbol 
         if (dictionary[sentence[i]] != undefined) {
-
             //create row and push valid symbol
-            tokens.push(sentence[i]);
-            craete_row(sentence[i],dictionary[sentence[i]],true);
+            if ((sentence[i] == '>' || sentence[i] == '<' || sentence[i] == '!') && i < sentence.length - 1 && sentence[i + 1] == '=') {
+                craete_row(sentence[i]+sentence[i+1], dictionary[sentence[i]+sentence[i+1]], true);
+                tokens.push(sentence[i]+sentence[i+1]);
+                i++;
+            }else {
+                tokens.push(sentence[i]);
+                craete_row(sentence[i], dictionary[sentence[i]], true);
+            }
 
-            //temporal_token contain any word
+            //temporal_token contain any word before the valid symbol
             if (temporal_token.length) {
+                if (identifier.test(temporal_token))
+                    craete_row(temporal_token, 'Identifier', true);
+                else if (number.test(temporal_token))
+                    craete_row(temporal_token, 'Number', true);
+                else
+                    craete_row(temporal_token, 'undefined', false);
 
-                if (identifier.test(temporal_token)) {
-                    craete_row(temporal_token,'identifier',true);
-                }
-                else if (number.test(temporal_token)) {
-                    craete_row(temporal_token,'number',true);
-                }
-                else {
-                    craete_row(temporal_token,'undefined',false);
-                }
-                
                 temporal_token = '';
             }
-            continue; 
+            continue;
         }
 
         temporal_token += sentence[i];
@@ -56,22 +56,19 @@ function test() {
         //complex symbol 
         if (dictionary[temporal_token] != undefined) {
             tokens.push(temporal_token);
-            craete_row(temporal_token,dictionary[temporal_token],true);
+            craete_row(temporal_token, dictionary[temporal_token], true);
             temporal_token = '';
         }
+    }
+    //the sentence finalize and don't found any reserved symbol or word
+    if (temporal_token.length) {
+        if (identifier.test(temporal_token))
+            craete_row(temporal_token, 'identifier', true);
+        else if (number.test(temporal_token))
+            craete_row(temporal_token, 'number', true);
+        else
+            craete_row(temporal_token, 'undefined', false);
 
-        //the sentence finalize and don¿t found any reserved symbol or word
-        if (i == sentence.length-1 && temporal_token.length) {
-            if (identifier.test(temporal_token)) {
-                craete_row(temporal_token,'identifier',true);
-            }
-            else if (number.test(temporal_token)) {
-                craete_row(temporal_token,'number',true);
-            }
-            else {
-                craete_row(temporal_token,'undefined',false);
-            }
-        }
     }
     document.getElementById('sentence').value = "";
 }
@@ -82,7 +79,6 @@ function clear_table() {
 }
 
 function craete_row(token,value,state) {
-
     let row = document.createElement('tr');
 
     let col = document.createElement('td');
