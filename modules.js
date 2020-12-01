@@ -1,13 +1,13 @@
 const dictionary = {
     'if':'Reserved Word',
-    '&&':'Logic Operator - and',
-    '||':'Logic Operator - or',
+    '&&':'And',
+    '||':'Or',
     '>':'Mayor',
     '>=':'Mayor or Equal',
     '<':'Minor',
     '<=':'Minor or Equal',
-    '!':'Difernt',
-    '!=':'Difernt',
+    '!':'Diferent',
+    '!=':'Diferent',
     '==':'Identical',
     '(':'Open Parenthesis',
     ')':'Closed Parenthesis'
