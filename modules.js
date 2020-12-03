@@ -6,14 +6,15 @@ const dictionary = {
     '>=':'Mayor or Equal',
     '<':'Minor',
     '<=':'Minor or Equal',
-    '!':'Diferent',
-    '!=':'Diferent',
+    '!':'Different',
+    '!=':'Different',
     '==':'Identical',
+    '=':'Identical',
     '(':'Open Parenthesis',
     ')':'Closed Parenthesis'
 }
 const identifier = new RegExp('^[_a-zA-Z][_a-zA-Z0-9]{0,30}$');
-const number = new RegExp('^-?[0-9]+(.[0-9]+)?$');
+const number = new RegExp('^(-|\\+)?[0-9]+(.[0-9]+)?$');
 
 function test() {
     let sentence = document.getElementById('sentence').value;
@@ -28,7 +29,7 @@ function test() {
         //simple symbol 
         if (dictionary[sentence[i]] != undefined) {
             //create row and push valid symbol
-            if ((sentence[i] == '>' || sentence[i] == '<' || sentence[i] == '!') && i < sentence.length - 1 && sentence[i + 1] == '=') {
+            if ((sentence[i] == '>' || sentence[i] == '<' || sentence[i] == '!' || sentence[i] == '=') && i < sentence.length - 1 && sentence[i + 1] == '=') {
                 craete_row(sentence[i]+sentence[i+1], dictionary[sentence[i]+sentence[i+1]], true);
                 tokens.push(sentence[i]+sentence[i+1]);
                 i++;
@@ -41,8 +42,19 @@ function test() {
             if (temporal_token.length) {
                 if (identifier.test(temporal_token))
                     craete_row(temporal_token, 'Identifier', true);
-                else if (number.test(temporal_token))
-                    craete_row(temporal_token, 'Number', true);
+                else if (number.test(temporal_token)) {
+                    let value = "Number";
+                    if (temporal_token.indexOf('+') !== -1){
+                        value = "Positive " + value;
+                    }
+                    else if (temporal_token.indexOf('-') !== -1){
+                        value = "Negative " + value;
+                    }
+                    else if (temporal_token.indexOf('.') !== -1){
+                        value = "Real " + value;
+                    }
+                    craete_row(temporal_token, value, true);
+                }
                 else
                     craete_row(temporal_token, 'undefined', false);
 
@@ -64,8 +76,19 @@ function test() {
     if (temporal_token.length) {
         if (identifier.test(temporal_token))
             craete_row(temporal_token, 'identifier', true);
-        else if (number.test(temporal_token))
-            craete_row(temporal_token, 'number', true);
+        else if (number.test(temporal_token)){
+            let value = "Number";
+            if (temporal_token.indexOf('+') !== -1){
+                value = "Positive " + value;
+            }
+            else if (temporal_token.indexOf('-') !== -1){
+                value = "Negative " + value;
+            }
+            else if (temporal_token.indexOf('.') !== -1){
+                value = "Real " + value;
+            }
+            craete_row(temporal_token, value, true);
+        }
         else
             craete_row(temporal_token, 'undefined', false);
 
