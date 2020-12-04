@@ -45,14 +45,15 @@ function test() {
                     craete_row(temporal_token, 'Identifier', true);
                 else if (number.test(temporal_token)) {
                     let value = "Number";
+                    if (temporal_token.indexOf('.') !== -1){
+                        value = "Real " + value;
+                    }
+
                     if (temporal_token.indexOf('+') !== -1){
                         value = "Positive " + value;
                     }
                     else if (temporal_token.indexOf('-') !== -1){
                         value = "Negative " + value;
-                    }
-                    else if (temporal_token.indexOf('.') !== -1){
-                        value = "Real " + value;
                     }
                     craete_row(temporal_token, value, true);
                 }
@@ -81,16 +82,16 @@ function test() {
     if (temporal_token.length) {
         if (identifier.test(temporal_token))
             craete_row(temporal_token, 'identifier', true);
-        else if (number.test(temporal_token)){
+        else if (number.test(temporal_token)) {
             let value = "Number";
+            if (temporal_token.indexOf('.') !== -1){
+                value = "Real " + value;
+            }
             if (temporal_token.indexOf('+') !== -1){
                 value = "Positive " + value;
             }
             else if (temporal_token.indexOf('-') !== -1){
                 value = "Negative " + value;
-            }
-            else if (temporal_token.indexOf('.') !== -1){
-                value = "Real " + value;
             }
             craete_row(temporal_token, value, true);
         }
