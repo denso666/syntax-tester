@@ -18,6 +18,7 @@ const number = new RegExp('^(-|\\+)?[0-9]+(.[0-9]+)?$');
 
 function test() {
     let sentence = document.getElementById('sentence').value;
+    sentence += " ";
     let temporal_token = '';
     let tokens = [];
 
@@ -67,9 +68,13 @@ function test() {
 
         //complex symbol 
         if (dictionary[temporal_token] != undefined) {
-            tokens.push(temporal_token);
-            craete_row(temporal_token, dictionary[temporal_token], true);
-            temporal_token = '';
+            if (temporal_token == "if" && sentence[i+1] == '(' || sentence[i+1] == ' '){
+                tokens.push(temporal_token);
+                craete_row(temporal_token, dictionary[temporal_token], true);
+                temporal_token = '';
+            } else {
+                continue;
+            }
         }
     }
     //the sentence finalize and don't found any reserved symbol or word
